@@ -8,15 +8,17 @@ counter = 0
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    return f"""
-    <h1>{counter}</h1>
+    return """
+    <h1 id="counter">0</h1>
     <button onclick="count()">Count</button>
 
     <script>
-        async function count() {{
-            await fetch("/count");
-            location.reload();
-        }}
+        async function count() {
+            const response = await fetch("/count");
+            const data = await response.json();
+
+            document.getElementById("counter").innerText = data.counter;
+        }
     </script>
     """
 
@@ -25,3 +27,4 @@ def home():
 def count():
     global counter
     counter += 1
+    return {"counter": counter}
